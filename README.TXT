@@ -25,6 +25,8 @@ Bike -> Filter 3 -> subfilter 2
 
 See demonstration video at: http://youtu.be/2Ex17Uvpfl4
 
+Github: https://github.com/joelcorreia/category_importer
+
 Install
 =======
 1) copy admin folders in the root folder of your website(opencart instalation folder)
