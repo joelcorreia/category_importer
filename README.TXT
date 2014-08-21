@@ -1,4 +1,4 @@
-Easy category Importer and Exporter for OpenCart 1.5.3.x | Version 1.2012.11.22
+Easy category Importer and Exporter for OpenCart 1.5.6.4 | Version 1.2014.08.21
 ================================================
 About
 =======

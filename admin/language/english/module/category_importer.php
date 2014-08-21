@@ -1,7 +1,7 @@
 <?php
 #############################################################################
-#	Version 1.2012.11.22
-#  	Original developed to OpenCart 1.5.x by  Joel Correia, web: www.joelcorreia.com email: email@joelcorreia.com
+#	Version 1.2014.08.21
+#  	Original developed to OpenCart 1.5.6.4 by  Joel Correia, web: www.joelcorreia.com email: email@joelcorreia.com
 #
 #############################################################################
 // Heading
