@@ -40,7 +40,7 @@ class ControllerModulecategoryimporter extends Controller {
 		{
 			$this->model_setting_setting->editSetting('category_importer', $this->request->post);
 
-
+			$mysqli_link = mysqli_connect(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
 
 			$post_categories = '';
 			if (isset($this->request->post['categories']))
@@ -69,9 +69,7 @@ class ControllerModulecategoryimporter extends Controller {
 				$categories = explode(" -&gt; ", $line);
 				$number_of_categories = count($categories);
 				$number_of_categories_before_that_exists = 0;
-				$array_of_parents_categories_id = array();
-
-
+				$array_of_parents_categories_id = array();				
 
 				$level = 0;
 				$parent_category_id = 0;
@@ -85,9 +83,9 @@ class ControllerModulecategoryimporter extends Controller {
 					$level++;
 
 					if($level==1)
-						$category_id = $this->db->query("SELECT MAX(IFNULL(category_id,0)) category_id FROM " . DB_PREFIX . "category_description WHERE name = '" . mysql_real_escape_string($category) . "' LIMIT 1 UNION SELECT 0")->row['category_id'];
+						$category_id = $this->db->query("(SELECT MAX(IFNULL(category_id,0)) category_id FROM " . DB_PREFIX . "category_description WHERE name = '" . mysqli_real_escape_string($mysqli_link, $category) . "' LIMIT 1) UNION (SELECT 0)")->row['category_id'];
 					else
-						$category_id = $this->db->query("SELECT IFNULL(" . DB_PREFIX . "category.category_id,0) category_id FROM  " . DB_PREFIX . "category_description, " . DB_PREFIX . "category WHERE  " . DB_PREFIX . "category_description.category_id= " . DB_PREFIX . "category.category_id AND  " . DB_PREFIX . "category_description.name = '" . mysql_real_escape_string($category) . "' AND  " . DB_PREFIX . "category.parent_id=". $parent_category_id. " LIMIT 1 UNION SELECT 0")->row['category_id'];
+						$category_id = $this->db->query("(SELECT IFNULL(" . DB_PREFIX . "category.category_id,0) category_id FROM  " . DB_PREFIX . "category_description, " . DB_PREFIX . "category WHERE  " . DB_PREFIX . "category_description.category_id= " . DB_PREFIX . "category.category_id AND  " . DB_PREFIX . "category_description.name = '" . mysqli_real_escape_string($mysqli_link, $category) . "' AND  " . DB_PREFIX . "category.parent_id=". $parent_category_id. " LIMIT 1) UNION (SELECT 0)")->row['category_id'];
 
 					$array_of_parents_categories_id[] = $category_id;
 					/*
@@ -133,7 +131,7 @@ class ControllerModulecategoryimporter extends Controller {
 						$this->load->model('catalog/category');
 						$this->model_catalog_category->addCategory($data_new_category);
 
-						$category_id = $this->db->query("SELECT MAX(IFNULL(category_id,0)) category_id FROM " . DB_PREFIX . "category_description WHERE name = '" . mysql_real_escape_string($category) . "' LIMIT 1 UNION SELECT 0")->row['category_id'];
+						$category_id = $this->db->query("(SELECT MAX(IFNULL(category_id,0)) category_id FROM " . DB_PREFIX . "category_description WHERE name = '" . mysqli_real_escape_string($mysqli_link, $category) . "' LIMIT 1) UNION (SELECT 0)")->row['category_id'];
 						$new_categories++;
 					}
 
@@ -145,6 +143,8 @@ class ControllerModulecategoryimporter extends Controller {
 
 			$this->session->data['success'] = $this->language->get('text_success') . $new_categories;
 
+			mysqli_close($link);
+			
 			$this->redirect($this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL'));
 		}
 
